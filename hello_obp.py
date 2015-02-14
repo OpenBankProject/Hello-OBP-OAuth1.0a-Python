@@ -2,8 +2,8 @@
 from requests_oauthlib import OAuth1Session
 # oauth flow in simple words: http://pyoauth.readthedocs.org/en/latest/guides/oauth1.html
 
-client_key = "yourkeyhere"
-client_secret = "yoursecrethere"
+client_key = "youcustomerkey"
+client_secret = "youcustomersecret"
 
 base_url = "https://ulsterbank.openbankproject.com"
 request_token_url = base_url + "/oauth/initiate"
