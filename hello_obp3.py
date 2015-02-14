@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from requests_oauthlib import OAuth1Session
 
-client_key = "youcustomerkey"
-client_secret = "youcustomersecret"
+client_key = "2aii20v4al12btbahozwgknr5egt0sj12xppgt31"
+client_secret = "x5qdq32xlktyasl30myp2ytxkshnjoj0rrtcjaaz"
 
 request_token_url = "https://apisandbox.openbankproject.com/oauth/initiate"
 authorization_base_url = "https://apisandbox.openbankproject.com/oauth/authorize"
