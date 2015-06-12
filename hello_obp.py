@@ -23,31 +23,8 @@ openbank.parse_authorization_response(redirect_response)
 
 openbank.fetch_access_token(access_token_url)
 
-#get accounts for a specific bank
-our_bank = 'rbs'
-print "Available accounts"
-r = openbank.get(u"{}/obp/v1.2.1/banks/{}/accounts/private".format(base_url, our_bank))
+r = openbank.get(base_url + "/obp/v1.2.1/banks/testbank/accounts/private")
 
-accounts = r.json()['accounts']
-for a in accounts:
-    print a['id']
-
-#just picking first account
-our_account = accounts[0]['id']
-
-print "Get owner transactions"
-r = openbank.get(u"{}/obp/v1.2.1/banks/{}/accounts/{}/owner/transactions".format(base_url,
-    our_bank,
-    our_account), headers= {'obp_limit': '25'})
-transactions = r.json()['transactions']
-print "Got {} transactions".format(len(transactions))
-
-print "Transfer some money"
-send_to = {"bank": "rbs", "account": "savings-kids-john"}
-payload = '{"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + '", "amount": "10" }'
-headers = {'content-type': 'application/json'}
-r = openbank.post(u"{}/obp/v1.2.1/banks/{}/accounts/{}/owner/transactions".format(base_url,
-    our_bank, our_account), data=payload, headers=headers)
 print r
 print r.json()
 
