@@ -2,7 +2,7 @@
 
 import requests
 
-SECRET_TOKEN = 'foojf87ufhyajfhaasdeG'
+SECRET_TOKEN = 'change_me'
 API_HOST = 'http://127.0.0.1:8080'
 URL_IMPORT = '{}/obp/vsandbox/v1.0/data-import?secret_token={}'.format(
     API_HOST, SECRET_TOKEN)
