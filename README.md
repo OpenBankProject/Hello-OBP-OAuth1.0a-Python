@@ -7,23 +7,32 @@ Python Example for OBP API
 $ pip install -r requirements.txt
 ```
 
+All scripts should run with either Python 2 or 3 .
+
+### settings.py
+
+Edit settings.py to set your preferences like API_HOST, etc. The available settings are documented there.
+
+
+
 
 ## Hello OBP
 
 ```bash
-$ python2 hello_obp.py
-
-$ python3 hello.obp3.py
+$ python hello_obp.py
 ```
+
+
 
 
 ## Hello Payments
 
 ```bash
-$ python2 hello_payments_v1.4.py
+$ python hello_payments_v1.4.py
 ```
 
-The other payments script is kept for historical reasons.
+The other payments script is kept for historical reasons, better don't use it.
+
 
 
 
@@ -32,5 +41,5 @@ The other payments script is kept for historical reasons.
 Edit the data to import in the script, then run:
 
 ```bash
-$ python2 import_sandbox.py
+$ python import_sandbox.py
 ```

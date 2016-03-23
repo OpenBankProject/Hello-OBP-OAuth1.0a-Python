@@ -1,30 +1,29 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from requests_oauthlib import OAuth1Session
-# oauth flow in simple words: http://pyoauth.readthedocs.org/en/latest/guides/oauth1.html
+"""
+This script says hello to the OpenBankProject API
 
-client_key = "youcustomerkey"
-client_secret = "youcustomersecret"
+Configure settings.py to suit your needs.
+"""
 
-base_url = "https://apisandbox.openbankproject.com"
-request_token_url = base_url + "/oauth/initiate"
-authorization_base_url = base_url + "/oauth/authorize"
-access_token_url = base_url + "/oauth/token"
+from pprint import pprint
 
-openbank = OAuth1Session(client_key, client_secret=client_secret, callback_uri='http://127.0.0.1/cb')
+from oauth_dance import get_api
+from settings import API_BASE_URL
 
-openbank.fetch_request_token(request_token_url)
 
-authorization_url = openbank.authorization_url(authorization_base_url)
-print 'Please go here and authorize, '
-print authorization_url
+def say_hello():
+    """Says hello to the API"""
+    api = get_api()
+    response = api.get(API_BASE_URL)
+    status_code = response.status_code
+    print('Status code: {}'.format(status_code))
+    if status_code == 200:
+        print('Success JSON:')
+        pprint(response.json())
+    else:
+        print(response.text)
 
-redirect_response = raw_input('Paste the full redirect URL here:')
-openbank.parse_authorization_response(redirect_response)
 
-openbank.fetch_access_token(access_token_url)
-
-r = openbank.get(base_url + "/obp/v1.2.1/banks/testbank/accounts/private")
-
-print r
-print r.json()
-
+if __name__ == '__main__':
+    say_hello()

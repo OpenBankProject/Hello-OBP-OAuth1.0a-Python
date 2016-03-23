@@ -1,110 +1,149 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+This script will execute a payment transation via the OpenBankProject API
 
-from requests_oauthlib import OAuth1Session
+Note: in order to use this example, you need to have at least one account
+that you can send money from (i.e. be the owner).
+
+Configure settings.py to suit your needs.
+"""
+
+import json
 import sys
 
-# Note: in order to use this example, you need to have at least one account
-# that you can send money from (i.e. be the owner).
-
-# API server URL
-BASE_URL = "http://127.0.0.1:8080"
-
-# enter your api credentials here, get from BASE_URL/consumer-registration
-CLIENT_KEY = 'client-key'
-CLIENT_SECRET = 'client-secret'
-
-# API server will redirect your browser to this URL, should be non-functional
-# You will paste the redirect location here when running the script
-CALLBACK_URI = 'http://127.0.0.1/cb'
-
-# Our account's bank
-OUR_BANK = 'our-bank-id'
-# Our counterpart account id (of the same currency)
-OUR_COUNTERPART = 'valid-counterpart-accountid-same-currency'
-# Our currency to use
-OUR_CURRENCY = 'GBP'
-# Our value to transfer
-OUR_VALUE = '0.01'
+from oauth_dance import get_api
+from settings import (
+    API_BASE_URL,
+    MY_BANK,
+    COUNTERPARTY_BANK,
+    COUNTERPARTY_ACCOUNT_ID,
+    PAYMENT_CURRENCY,
+    PAYMENT_VALUE,
+    PAYMENT_DESCRIPTION,
+)
 
 
-# You probably don't need to change those
-REQUEST_TOKEN_URL = BASE_URL + "/oauth/initiate"
-AUTHORIZATION_BASE_URL = BASE_URL + "/oauth/authorize"
-ACCESS_TOKEN_URL = BASE_URL + "/oauth/token"
+URL_MY_BANK = '{}/banks/{}'.format(API_BASE_URL, MY_BANK)
+URL_PRIVATE_ACCOUNTS = '{}/accounts/private'.format(URL_MY_BANK)
+FMT_URL_TRANSACTIONS = '{}/accounts/{}/owner/transactions'
+FMT_URL_REQUEST_TYPES = '{}/accounts/{}/owner/transaction-request-types'
+FMT_URL_TRANSACTION_REQUESTS = \
+    FMT_URL_REQUEST_TYPES + '/{}/transaction-requests'
+FMT_URL_TRANSACTION_CHALLENGE = \
+    FMT_URL_REQUEST_TYPES + '/sandbox/transaction-requests/{}/challenge'
+
+TRANSACTIONS_LIMIT = '25'
 
 
+def get_account(api):
+    """Get my account (id) from the API"""
+    # Print some account info
+    print('Getting private accounts ...')
+    response = api.get(URL_PRIVATE_ACCOUNTS)
+    data = response.json()
+    for account in data['accounts']:
+        print(' Available account id: {}'.format(account['id']))
 
-openbank = OAuth1Session(CLIENT_KEY, client_secret=CLIENT_SECRET, callback_uri=CALLBACK_URI)
-openbank.fetch_request_token(REQUEST_TOKEN_URL)
-
-authorization_url = openbank.authorization_url(AUTHORIZATION_BASE_URL)
-print openbank
-print 'Please go here and authorize:\n', authorization_url
-
-redirect_response = raw_input('Paste the full redirect URL here:')
-openbank.parse_authorization_response(redirect_response)
-openbank.fetch_access_token(ACCESS_TOKEN_URL)
-
-#get accounts for a specific bank
-print "Private accounts"
-r = openbank.get(u"{}/obp/v1.4.0/banks/{}/accounts/private".format(BASE_URL, OUR_BANK))
-
-print r.json()
-
-accounts = r.json()['accounts']
-for a in accounts:
-    print a['id']
-
-#just picking first account
-our_account = accounts[0]['id']
-print "our account: {}".format(our_account)
-
-print "Get owner transactions"
-r = openbank.get(u"{}/obp/v1.4.0/banks/{}/accounts/{}/owner/transactions".format(BASE_URL,
-    OUR_BANK,
-    our_account), headers= {'obp_limit': '25'})
-transactions = r.json()['transactions']
-print "Got {} transactions".format(len(transactions))
-
-print "Get challenge request types"
-r = openbank.get(u"{}/obp/v1.4.0/banks/{}/accounts/{}/owner/transaction-request-types".format(BASE_URL,
-    OUR_BANK,
-    our_account))
-
-challenge_type = r.json()[0]['value']
-print challenge_type
+    # Just picking first account
+    my_account = data['accounts'][0]['id']
+    print("Picking account: {}".format(my_account))
+    return my_account
 
 
-print "Initiate transaction request"
-send_to = {"bank": OUR_BANK, "account": OUR_COUNTERPART}
-payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
-    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
-    challenge_type + '"}'
-headers = {'content-type': 'application/json'}
-r = openbank.post(u"{}/obp/v1.4.0/banks/{}/accounts/{}/owner/transaction-request-types/{}/transaction-requests".format(
-    BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=headers)
-initiate_response = r.json()
+def print_transactions(api, my_account):
+    """Prints number of transactions on my account in the API"""
+    url_transactions = FMT_URL_TRANSACTIONS.format(URL_MY_BANK, my_account)
+    headers = {
+        'obp_limit': TRANSACTIONS_LIMIT,
+    }
+    print("Getting transactions for my account ...")
+    response = api.get(url_transactions, headers=headers)
+    transactions = response.json()['transactions']
+    print("Got {} transactions".format(len(transactions)))
 
-if "error" in initiate_response:
-    sys.exit("Got an error: " + str(initiate_response))
 
-if (initiate_response['challenge'] != None):
-    #we need to answer the challenge
-    challenge_query = initiate_response['challenge']['id']
-    transation_req_id = initiate_response['id']['value']
+def get_challenge_type(api, my_account):
+    """Gets the challenge type to use for the payment from the API"""
+    url_request_types = FMT_URL_REQUEST_TYPES.format(URL_MY_BANK, my_account)
+    print("Getting challenge request types ...")
+    response = api.get(url_request_types)
+    challenge_type = response.json()[0]['value']
+    print("Got type {}".format(challenge_type))
+    return challenge_type
 
-    print "Challenge query is {}".format(challenge_query)
-    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
-    r = openbank.post(u"{}/obp/v1.4.0/banks/{}/accounts/{}/owner/transaction-request-types/sandbox/transaction-requests/{}/challenge".format(
-        BASE_URL, OUR_BANK, our_account, transation_req_id), data=body, headers=headers
-    )
 
-    challenge_response = r.json()
-    if "error" in challenge_response:
-        sys.exit("Got an error: " + str(challenge_response))
+def initiate_transaction(api, my_account):
+    """
+    Initiates a transaction request on the API
 
-    print "Transaction status: {}".format(challenge_response['status'])
-    print "Transaction created: {}".format(challenge_response["transaction_ids"])
-else:
-    #There was no challenge, transaction was created immediately
-    print "Transaction was successfully created: {}".format(initiate_response["transaction_ids"])
+    Either payment will be processed directly or a challenge is returned.
+    """
+    challenge_type = get_challenge_type(api, my_account)
+    url_transaction_requests = FMT_URL_TRANSACTION_REQUESTS.format(
+        URL_MY_BANK, my_account, challenge_type)
+    data = json.dumps({
+        'to': {
+            'account_id': COUNTERPARTY_ACCOUNT_ID,
+            'bank_id': COUNTERPARTY_BANK,
+        },
+        'value': {
+            'currency': PAYMENT_CURRENCY,
+            'amount': PAYMENT_VALUE,
+        },
+        'description': PAYMENT_DESCRIPTION,
+        'challenge_type': challenge_type,
+    })
+    headers = {'content-type': 'application/json'}
+    print("Initiating transaction request ...")
+    response = api.post(url_transaction_requests, data=data, headers=headers)
+    response = response.json()
+    return response
+
+
+def answer_challenge(api, my_account, challenge_query, transaction_request_id):
+    """Answers the API's transaction request challenge"""
+    print("Challenge query is {}".format(challenge_query))
+    url_transaction_challenge = FMT_URL_TRANSACTION_CHALLENGE.format(
+        URL_MY_BANK, my_account, transaction_request_id)
+    data = json.dumps({
+        'id': challenge_query,
+        'answer': '123456',  # any number works in sandbox mode
+    })
+    headers = {'content-type': 'application/json'}
+    print("Answering challenge ...")
+    response = api.post(url_transaction_challenge, data=data, headers=headers)
+    response = response.json()
+    if 'error' in response:
+        sys.exit('Got an error: ' + str(response))
+    return response
+
+
+def pay(api, my_account):
+    """Handles the payment process"""
+    response = initiate_transaction(api, my_account)
+    if 'error' in response:
+        sys.exit("Got an error: " + str(response))
+    if response['challenge'] is not None:
+        print('This request is challenged, you have {} attempt(s)'.format(
+            response['challenge']['allowed_attempts']))
+        response = answer_challenge(
+            api,
+            my_account,
+            response['challenge']['id'],
+            response['id']['value'],
+        )
+    print('Transaction status: {}'.format(response['status']))
+    print('Created transaction id: {}'.format(response['transaction_ids']))
+
+
+def hello_payment():
+    """Say hello, Payment!"""
+    api = get_api()
+    my_account = get_account(api)
+    print_transactions(api, my_account)
+    pay(api, my_account)
+
+
+if __name__ == '__main__':
+    hello_payment()
