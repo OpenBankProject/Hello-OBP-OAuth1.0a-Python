@@ -7,8 +7,6 @@ Imports sample data into your sandbox
 import random
 import string
 
-import requests
-
 from oauth_dance import get_api
 from settings import API_BASE_URL
 
@@ -26,7 +24,6 @@ def generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 
 BANK_ID = 'Bank {}'.format(generator())
-USER_EMAIL = '{}@foobar.com'.format(generator())
 DATA = {
     'banks': [{
         'id': BANK_ID,
@@ -38,8 +35,9 @@ DATA = {
 }
 
 
-def import_data(api):
+def import_data():
     """Import sandbox data"""
+    api = get_api()
     print('Posting data to {}'.format(URL_IMPORT))
     response = api.post(URL_IMPORT, json=DATA)
     if response.status_code == 201:
@@ -50,5 +48,4 @@ def import_data(api):
 
 
 if __name__ == '__main__':
-    api = get_api()
-    import_data(api)
+    import_data()
