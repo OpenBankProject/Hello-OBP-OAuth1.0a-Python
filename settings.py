@@ -8,9 +8,9 @@ credentials.
 
 # Get the OAuth credentials prior from the API, e.g.
 # https://apisandbox.openbankproject.com/consumer-registration
-# OAuth data for for anil.x.d.n@example.com
-CLIENT_KEY = '2na3xkig0kehgywgrdxq5aquodtq320oep2sq3zz'
-CLIENT_SECRET = 'vvil0c1tkqcvzqmo22lzjzaopt1gpy3zix3vlikd'
+CLIENT_KEY = ''
+CLIENT_SECRET = ''
+
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
 # the example scripts.
@@ -18,9 +18,10 @@ CALLBACK_URL = 'http://i_dont_exist'
 
 # API host to talk to
 API_HOST = 'http://127.0.0.1:8080'
+#API_HOST = 'https://apisandbox.openbankproject.com'
 
 # API version to use
-API_VERSION = '1.4.0'
+API_VERSION = '2.1.0'
 
 # API BASE URL
 API_BASE_URL = '{}/obp/v{}'.format(API_HOST, API_VERSION)
@@ -48,8 +49,3 @@ PAYMENT_VALUE = '0.01'
 
 # Payment description
 PAYMENT_DESCRIPTION = 'Hello Payments v1.4!'
-
-
-
-# Secret token for e.g data import
-SECRET_TOKEN = 'c02964c926bd4d8d8cb513a04'
