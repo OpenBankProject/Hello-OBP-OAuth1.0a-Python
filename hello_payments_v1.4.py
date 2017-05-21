@@ -68,7 +68,7 @@ def get_challenge_type(api, my_account):
     url_request_types = FMT_URL_REQUEST_TYPES.format(URL_MY_BANK, my_account)
     print("Getting challenge request types ...")
     response = api.get(url_request_types)
-    challenge_type = response.json()[0]['value']
+    challenge_type = response.json()['transaction_request_types'][0]['value']
     print("Got type {}".format(challenge_type))
     return challenge_type
 
