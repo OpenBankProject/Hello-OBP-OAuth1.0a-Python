@@ -16,7 +16,7 @@ http://pyoauth.readthedocs.org/en/latest/guides/oauth1.html
 from requests_oauthlib import OAuth1Session
 from six.moves import input
 
-from settings import CLIENT_KEY, CLIENT_SECRET, CALLBACK_URL, API_HOST
+from settings import CLIENT_KEY, CLIENT_SECRET, REDIRECT_URL, API_HOST
 
 
 OAUTH_BASE = '{}/oauth'.format(API_HOST)
@@ -30,7 +30,7 @@ def get_api():
 
     # initiate Oauth by fetching request token
     api = OAuth1Session(
-        CLIENT_KEY, client_secret=CLIENT_SECRET, callback_uri=CALLBACK_URL)
+        CLIENT_KEY, client_secret=CLIENT_SECRET, callback_uri=REDIRECT_URL)
     api.fetch_request_token(request_token_url)
 
     # ask user to visit authorization URL and paste response

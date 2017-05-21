@@ -14,7 +14,7 @@ CLIENT_SECRET = ''
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
 # the example scripts.
-CALLBACK_URL = 'http://i_dont_exist'
+REDIRECT_URL = 'http://i_dont_exist'
 
 # API host to talk to
 API_HOST = 'http://127.0.0.1:8080'
