@@ -21,7 +21,7 @@ API_HOST = 'http://127.0.0.1:8080'
 #API_HOST = 'https://apisandbox.openbankproject.com'
 
 # API version to use
-API_VERSION = '2.1.0'
+API_VERSION = '1.4.0'
 
 # API BASE URL
 API_BASE_URL = '{}/obp/v{}'.format(API_HOST, API_VERSION)
