@@ -8,8 +8,8 @@ credentials.
 
 # Get the OAuth credentials prior from the API, e.g.
 # https://apisandbox.openbankproject.com/consumer-registration
-CLIENT_KEY = 'frpdklye42jfu0lhnbfdbdxzzwqgvk0zn33aotio'
-CLIENT_SECRET = 'nyiwo15rxon0mal3umnlk5cf0igmexvivzzie4xm'
+CLIENT_KEY = 'tpxvzan1qt2xutnu0141o3dnsfni15jicyvoigi5'
+CLIENT_SECRET = 'amr1ll3wgkvqijjjexgyvt34rymzbh02reacs2l2'
 
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
@@ -17,9 +17,7 @@ CLIENT_SECRET = 'nyiwo15rxon0mal3umnlk5cf0igmexvivzzie4xm'
 REDIRECT_URL = 'https://www.example.com'
 
 # API host to talk to
-#API_HOST = 'http://127.0.0.1:8080'
-#API_HOST = 'https://apisandbox.openbankproject.com'
-API_HOST = 'https://citizensbank.openbankproject.com/'
+API_HOST = 'https://apisandbox.openbankproject.com'
 
 
 # API version to use
@@ -36,17 +34,17 @@ API_USER_URL = '{}/obp/v{}/users/current'.format(API_HOST, API_VERSION)
 # The account data below was taken from there
 
 # My bank we want to send money from
-MY_BANK = 'obp-bank-x-gh'
+MY_BANK = 'gh.29.uk'
 # My account is picked automatically at the moment
 # MY_ACCOUNT = ''
 
 # The counterparty we want to send money to
 
-COUNTERPARTY_BANK = 'obp-bank-x-gh'
-COUNTERPARTY_ACCOUNT_ID = '213527de-c423-452a-b2f8-8475e4cc2cfe'
+COUNTERPARTY_BANK = 'gh.29.uk'
+COUNTERPARTY_ACCOUNT_ID = '851273ba-90d5-43d7-bb31-ea8eba5903c7'
 
 # Currency used for payment
-PAYMENT_CURRENCY = 'GBP'
+PAYMENT_CURRENCY = 'EUR'
 
 # Payment value to transfer; values < 100 will not be challenged
 PAYMENT_VALUE = '0.01'
