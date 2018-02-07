@@ -17,7 +17,7 @@ authorization_url = openbank.authorization_url(authorization_base_url)
 print 'Please go here and authorize:', authorization_url
 
 redirect_response = raw_input('Paste the full redirect URL here:')
-openbank.parse_authorization_response(redirect_response)
+openbank.parse_authorization_response(redirect_response.strip())
 openbank.fetch_access_token(access_token_url)
 
 #get accounts for a specific bank
