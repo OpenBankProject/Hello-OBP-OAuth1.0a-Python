@@ -40,6 +40,6 @@ def get_api():
     redirect_response = input('Paste the full redirect URL here: ')
 
     # parse authorization response (contains callback_uri) and access token
-    api.parse_authorization_response(redirect_response)
+    api.parse_authorization_response(redirect_response.strip())
     api.fetch_access_token(access_token_url)
     return api

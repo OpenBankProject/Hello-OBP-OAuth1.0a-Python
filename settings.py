@@ -19,7 +19,7 @@ REDIRECT_URL = 'https://www.example.com'
 # API host to talk to
 #API_HOST = 'http://127.0.0.1:8080'
 #API_HOST = 'https://apisandbox.openbankproject.com'
-API_HOST = 'https://citizensbank.openbankproject.com/'
+API_HOST = 'https://citizensbank.openbankproject.com'
 
 
 # API version to use
@@ -36,17 +36,17 @@ API_USER_URL = '{}/obp/v{}/users/current'.format(API_HOST, API_VERSION)
 # The account data below was taken from there
 
 # My bank we want to send money from
-MY_BANK = 'obp-bank-x-gh'
+MY_BANK = 'cb.44.us.cb'
 # My account is picked automatically at the moment
 # MY_ACCOUNT = ''
 
 # The counterparty we want to send money to
 
-COUNTERPARTY_BANK = 'obp-bank-x-gh'
-COUNTERPARTY_ACCOUNT_ID = '213527de-c423-452a-b2f8-8475e4cc2cfe'
+COUNTERPARTY_BANK = 'cb.44.us.cb'
+COUNTERPARTY_ACCOUNT_ID = 'fffa4d8c-29b0-49d0-adde-1c63680865be'
 
 # Currency used for payment
-PAYMENT_CURRENCY = 'GBP'
+PAYMENT_CURRENCY = 'USD'
 
 # Payment value to transfer; values < 100 will not be challenged
 PAYMENT_VALUE = '0.01'
