@@ -8,13 +8,13 @@ credentials.
 
 # Get the OAuth credentials prior from the API, e.g.
 # https://apisandbox.openbankproject.com/consumer-registration
-CLIENT_KEY = 'twnuhp2fpjqtm1eyhlcpbgswwfwyeymraborbcfd'
-CLIENT_SECRET = 'sva1xfm3n2nv2ohfrvofzpud2q5pnwp2w5ktiixy'
+CLIENT_KEY = 'frpdklye42jfu0lhnbfdbdxzzwqgvk0zn33aotio'
+CLIENT_SECRET = 'nyiwo15rxon0mal3umnlk5cf0igmexvivzzie4xm'
 
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
 # the example scripts.
-REDIRECT_URL = 'http://i_dont_exist'
+REDIRECT_URL = 'https://www.example.com'
 
 # API host to talk to
 #API_HOST = 'http://127.0.0.1:8080'
