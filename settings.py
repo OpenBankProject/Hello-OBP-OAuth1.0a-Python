@@ -8,8 +8,8 @@ credentials.
 
 # Get the OAuth credentials prior from the API, e.g.
 # https://apisandbox.openbankproject.com/consumer-registration
-CLIENT_KEY = ''
-CLIENT_SECRET = ''
+CLIENT_KEY = 'twnuhp2fpjqtm1eyhlcpbgswwfwyeymraborbcfd'
+CLIENT_SECRET = 'sva1xfm3n2nv2ohfrvofzpud2q5pnwp2w5ktiixy'
 
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
@@ -17,15 +17,19 @@ CLIENT_SECRET = ''
 REDIRECT_URL = 'http://i_dont_exist'
 
 # API host to talk to
-API_HOST = 'http://127.0.0.1:8080'
+#API_HOST = 'http://127.0.0.1:8080'
 #API_HOST = 'https://apisandbox.openbankproject.com'
+API_HOST = 'https://citizensbank.openbankproject.com/'
+
 
 # API version to use
-API_VERSION = '1.4.0'
+API_VERSION = '3.0.0'
 
 # API BASE URL
 API_BASE_URL = '{}/obp/v{}'.format(API_HOST, API_VERSION)
 
+# For the current user (hack)
+API_USER_URL = '{}/obp/v{}/users/current'.format(API_HOST, API_VERSION)
 
 # For initial testing, you might want to get some sample data:
 # https://raw.githubusercontent.com/OpenBankProject/OBP-API/develop/src/main/scala/code/api/sandbox/example_data/example_import.json
